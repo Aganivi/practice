@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./reactivity.js"></script>
+  <!-- <script src="./computed.js"></script> -->
+  <script src="./findMid.js"></script>
+</head>
+<body>
+  <div id="age"></div>
+  <script>
+    const data = { name: 'Agan', age: 18}
+    const obj = new Proxy(data, {
+      get(target, key){
+        track(target, key)
+        return target[key]
+      },
+      set(target, key, value){
+        target[key] = value
+        trigger(target, key)
+      }
+    })
+    const person = computed(() => obj.age + 1)
+
+    document.getElementById('age').innerText = obj.name + ':' + person.value
+    setTimeout(() => {
+      obj.age++
+      document.getElementById('age').innerText = obj.name + ':' + person.value
+      console.log(`person.value:`, person.value)
+    },1000)
+  </script>
+</body>
+</html>
